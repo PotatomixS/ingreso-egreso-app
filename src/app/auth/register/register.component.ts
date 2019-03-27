@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.reducer';
 
 @Component({
   selector: 'app-register',
@@ -8,13 +10,17 @@ import { AuthService } from '../auth.service';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor( public authService: AuthService ) { }
+  cargando:boolean;
+
+  constructor( public authService: AuthService,
+               public store: Store<AppState> ) { }
 
   ngOnInit() {
+    this.store.select('ui')
+          .subscribe( ui => this.cargando = ui.isLoading);
   }
 
   onSubmit( data: any){
-    console.log(data);
     this.authService.crearUsuario(data.nombre,data.email,data.password);
   }
 }
